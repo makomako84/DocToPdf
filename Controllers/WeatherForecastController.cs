@@ -46,7 +46,9 @@ namespace DocToPdf.Controllers
         public async Task<IActionResult> CreatePdfFromDocx(IFormFile file)
         {
             var pdf = (byte[])await _htmlToPdfService.CreatePdf(file);
-            return File(pdf, "application/octet-stream", DateTime.Now + "download.pdf");
+            System.IO.File.WriteAllBytes("download.pdf", pdf);
+            return Ok();
+            //return File(pdf, "application/octet-stream", DateTime.Now + "download.pdf");
         }
     }
 }
