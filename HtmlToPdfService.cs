@@ -9,7 +9,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using DinkToPdf;
+using WkHtmlToPdfDotNet;
+using WkHtmlToPdfDotNet.Contracts;
 using System.Runtime.Loader;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -33,6 +34,12 @@ namespace DocToPdf
 
         public async Task<object> CreatePdf(IFormFile file)
         {            
+            await CreateHtml(file);
+            return await CreatePdfConverter(file);
+        }
+
+        private async Task CreateHtml(IFormFile file)
+        {
             using var memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream);   
 
@@ -42,8 +49,12 @@ namespace DocToPdf
             XElement html = HtmlConverter.ConvertToHtml(document, settings);               
             var writer = File.CreateText("test.html");
             writer.WriteLine(html.ToString());
-            writer.Dispose();            
+            writer.Dispose();    
+        }
 
+        private async Task<object> CreatePdfConverter(IFormFile file)
+        {
+            byte[] pdf = null;
             var converter = new SynchronizedConverter(new PdfTools());
 
             var doc = new HtmlToPdfDocument()
@@ -64,7 +75,15 @@ namespace DocToPdf
                 }
             };
 
-            byte[] pdf = converter.Convert(doc);
+            
+            pdf = converter.Convert(doc);
+
+            return pdf;
+        }
+
+        private async Task<object> CreatePdfUtil(IFormFile file)
+        {
+            byte[] pdf = null;
 
             return pdf;
         }

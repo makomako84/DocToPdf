@@ -1,5 +1,5 @@
-using DinkToPdf;
-using DinkToPdf.Contracts;
+using WkHtmlToPdfDotNet;
+using WkHtmlToPdfDotNet.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
